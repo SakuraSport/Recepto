@@ -1,0 +1,112 @@
+{% extends 'main/base.html' %}
+
+{% block title %}CookBook - Каталог рецептов{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Кулинарные шедевры</h1>
+            <p>Откройте для себя тысячи вкусных рецептов от талантливых поваров со всего мира. Делитесь своими творениями и вдохновляйте других!</p>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="document.querySelector('.search-input').focus()">Искать рецепты</button>
+                <button class="btn btn-secondary" onclick="window.location.href='/add-recipe/'">Добавить свой рецепт</button>
+            </div>
+        </div>
+        <div class="hero-image">
+            🍽️
+        </div>
+    </div>
+</section>
+
+<!-- Search Section -->
+<section class="search-section">
+    <div class="container">
+        <form method="GET" action="{% url 'recipes_list' %}" style="display: contents;">
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    name="q"
+                    placeholder="Введите название рецепта, ингредиент..."
+                >
+                <button type="submit" class="search-btn">🔍</button>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 2rem; justify-content: center; flex-wrap: wrap;">
+                <a href="{% url 'recipes_list' %}" class="btn btn-secondary btn-sm">Все рецепты</a>
+                <a href="{% url 'recipes_list' %}?category=breakfast" class="btn btn-secondary btn-sm">Завтрак</a>
+                <a href="{% url 'recipes_list' %}?category=lunch" class="btn btn-secondary btn-sm">Обед</a>
+                <a href="{% url 'recipes_list' %}?category=dinner" class="btn btn-secondary btn-sm">Ужин</a>
+                <a href="{% url 'recipes_list' %}?category=dessert" class="btn btn-secondary btn-sm">Десерты</a>
+                <a href="{% url 'recipes_list' %}?category=drink" class="btn btn-secondary btn-sm">Напитки</a>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Featured Recipes -->
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>🌟 {% if recipes %}Последние рецепты{% else %}Рецептов пока нет{% endif %}</h2>
+            <p>{% if recipes %}Новые рецепты от нашего сообщества{% else %}Будьте первым, кто добавит рецепт!{% endif %}</p>
+        </div>
+
+        {% if recipes %}
+            <div class="recipes-grid">
+                {% for recipe in recipes %}
+                    <div class="recipe-card fade-in">
+                        <div class="recipe-image">
+                            {% if recipe.image %}
+                                <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" style="width:100%;height:100%;object-fit:cover;">
+                            {% else %}
+                                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8a680 0%,#d4743a 100%);font-size:60px;">
+                                    🍳
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="recipe-content">
+                            <h3 class="recipe-title">{{ recipe.title }}</h3>
+                            <div class="recipe-meta">
+                                <span>👤 {{ recipe.author.username }}</span>
+                                <span>⏱️ {{ recipe.get_total_time }} мин</span>
+                                <span>📊 {{ recipe.views }} просмотров</span>
+                            </div>
+                            <p class="recipe-description">{{ recipe.description }}</p>
+                            <div class="recipe-footer">
+                                <div class="recipe-likes">
+                                    <button class="like-btn {% if is_liked %}liked{% endif %}" onclick="toggleLike({{ recipe.id }})">❤️</button>
+                                    <span id="likes-{{ recipe.id }}">{{ recipe.likes }}</span>
+                                </div>
+                                <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary btn-sm">Подробнее</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div style="text-align:center;padding:3rem;">
+                <p style="font-size:18px;color:var(--text-light);">Рецепты пока не добавлены. <a href="{% url 'add_recipe' %}">Добавьте первый рецепт!</a></p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section style="background: linear-gradient(135deg, #fff8f0 0%, #ffe8d6 100%); padding: 4rem 0; text-align: center;">
+    <div class="container">
+        <h2 style="margin-bottom: 1rem;">Готовы поделиться своим рецептом?</h2>
+        <p style="font-size: 18px; color: var(--text-light); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Присоединяйтесь к нашему сообществу любителей готовить. Публикуйте свои рецепты, получайте лайки и вдохновляйте тысячи людей!
+        </p>
+        <a href="{% url 'add_recipe' %}" class="btn btn-primary">+ Добавить рецепт</a>
+    </div>
+</section>
+
+<script>
+    function toggleLike(recipeId) {
+        window.location.href = `/recipe/${recipeId}/like/`;
+    }
+</script>
+{% endblock %}

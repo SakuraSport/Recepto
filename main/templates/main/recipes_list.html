@@ -1,0 +1,294 @@
+{% extends 'main/base.html' %}
+{% block title %}Рецепты — Recepto{% endblock %}
+{% block extra_css %}
+<style>
+  .recipes-section {
+    padding: 2rem 0;
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .section-header h2 {
+    font-size: 32px;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-header p {
+    font-size: 16px;
+    color: var(--text-light);
+  }
+
+  .search-filter-box {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .search-filter-box form {
+    flex: 1;
+    max-width: 500px;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .search-filter-box input {
+    flex: 1;
+    padding: 10px 16px;
+    border: 2px solid var(--border);
+    border-radius: 25px;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .search-filter-box input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(212, 116, 58, 0.1);
+  }
+
+  .search-filter-box button {
+    padding: 10px 24px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .search-filter-box button:hover {
+    background: var(--primary-dark);
+  }
+
+  .filter-btn {
+    padding: 8px 16px;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    background: white;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--text-dark);
+    display: inline-block;
+  }
+
+  .filter-btn:hover,
+  .filter-btn.active {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+  }
+
+  .filters {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .recipe-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .recipe-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .recipe-card-image {
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    overflow: hidden;
+  }
+
+  .recipe-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .recipe-card-content {
+    padding: 1.5rem;
+  }
+
+  .recipe-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .recipe-card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .recipe-card-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .recipe-card-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 13px;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .recipe-card-author-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .no-recipes {
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+
+  .no-recipes h3 {
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  .no-recipes p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .recipes-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .section-header h2 {
+      font-size: 24px;
+    }
+
+    .search-filter-box form {
+      max-width: 100%;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="recipes-section">
+  <div class="container">
+    <!-- Header -->
+    <div class="section-header">
+      <h2>🍽️ {% if search_query %}Результаты поиска{% elif selected_category %}{{ selected_category }}{% else %}Все рецепты{% endif %}</h2>
+      {% if search_query %}
+        <p>Результаты для: <strong>{{ search_query }}</strong></p>
+      {% else %}
+        <p>Откройте для себя вкусные рецепты от нашего сообщества</p>
+      {% endif %}
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="search-filter-box">
+      <form method="GET" action="{% url 'recipes_list' %}">
+        <input type="text" name="q" placeholder="Поиск по названию или ингредиентам..." value="{{ search_query }}">
+        <button type="submit">🔍</button>
+      </form>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="filters">
+      <a href="{% url 'recipes_list' %}" class="filter-btn {% if not selected_category %}active{% endif %}">Все рецепты</a>
+      {% for value, label in categories %}
+        <a href="{% url 'recipes_list' %}?category={{ value }}" class="filter-btn {% if selected_category == value %}active{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </div>
+
+    <!-- Recipes Grid -->
+    {% if recipes %}
+      <div class="recipes-grid">
+        {% for recipe in recipes %}
+          <a href="{% url 'recipe_detail' recipe.id %}" class="recipe-card">
+            <div class="recipe-card-image">
+              {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}">
+              {% else %}
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">🍳</div>
+              {% endif %}
+            </div>
+            <div class="recipe-card-content">
+              <div class="recipe-card-title">{{ recipe.title }}</div>
+              <div class="recipe-card-meta">
+                <span>👁️ {{ recipe.views }}</span>
+                <span>❤️ {{ recipe.likes }}</span>
+                <span>⏱️ {{ recipe.get_total_time }}мин</span>
+              </div>
+              <div class="recipe-card-author">
+                <div class="recipe-card-author-avatar">
+                  {% if recipe.author.userprofile.avatar %}
+                    <img src="{{ recipe.author.userprofile.avatar.url }}" alt="{{ recipe.author.username }}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                  {% else %}
+                    👤
+                  {% endif %}
+                </div>
+                <span>{{ recipe.author.username }}</span>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="no-recipes">
+        <h3>😅 Рецептов не найдено</h3>
+        {% if search_query %}
+          <p>Попробуйте изменить поисковый запрос</p>
+        {% else %}
+          <p>Будьте первым, кто добавит рецепт!</p>
+        {% endif %}
+        <a href="{% url 'add_recipe' %}" class="btn btn-primary">➕ Добавить рецепт</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

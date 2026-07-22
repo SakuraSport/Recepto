@@ -1,0 +1,98 @@
+{% extends 'main/base.html' %}
+{% block title %}Вход — Recepto{% endblock %}
+{% block extra_css %}
+<style>
+  .auth-container {
+    max-width: 480px;
+    margin: 4rem auto;
+    background: white;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .auth-container h2 {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .auth-subtitle {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    font-size: 14px;
+  }
+
+  .form-group input {
+    border: 2px solid var(--border);
+    transition: all 0.3s ease;
+  }
+
+  .form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(212, 116, 58, 0.1);
+  }
+
+  .error-message {
+    background: rgba(231, 76, 60, 0.1);
+    border-left: 3px solid var(--accent);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    color: var(--accent);
+    font-size: 13px;
+  }
+
+  .auth-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 14px;
+    color: var(--text-light);
+  }
+
+  .auth-link a {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .btn-submit {
+    width: 100%;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="auth-container">
+      <h2>🍳 Добро пожаловать</h2>
+      <p class="auth-subtitle">Войдите в свой аккаунт Recepto</p>
+
+      {% if form.errors %}
+        <div class="error-message">
+          ❌ Неправильное имя пользователя или пароль. Попробуйте ещё раз.
+        </div>
+      {% endif %}
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="id_username">Имя пользователя</label>
+          {{ form.username }}
+        </div>
+
+        <div class="form-group">
+          <label for="id_password">Пароль</label>
+          {{ form.password }}
+        </div>
+
+        <button class="btn btn-primary btn-submit" type="submit">Войти</button>
+      </form>
+
+      <p class="auth-link">
+        Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a>
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}
+

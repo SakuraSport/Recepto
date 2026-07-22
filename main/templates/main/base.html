@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CookBook - Книга рецептов{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #d4743a;
+            --primary-light: #e8a680;
+            --primary-dark: #b8621f;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --light: #fef5e7;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --border: #ecf0f1;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 60px rgba(212, 116, 58, 0.15);
+        }
+
+        /* Dark theme colors */
+        :root[data-theme="dark"] {
+            --primary: #e8a680;
+            --primary-light: #f5c4a0;
+            --primary-dark: #d4743a;
+            --secondary: #e8a680;
+            --accent: #ff6b6b;
+            --success: #51cf66;
+            --light: #1e1e1e;
+            --white: #0d1117;
+            --text-dark: #e0e0e0;
+            --text-light: #b0b0b0;
+            --border: #2d2d2d;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            background: var(--white);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Merriweather', serif;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 48px; }
+        h2 { font-size: 36px; }
+        h3 { font-size: 24px; }
+
+        a {
+            text-decoration: none;
+            color: var(--primary);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(135deg, var(--white) 0%, #fdf9f3 100%);
+            border-bottom: 2px solid var(--border);
+            backdrop-filter: blur(10px);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        [data-theme="dark"] nav {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d1117 100%);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Merriweather', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: '🍳';
+            font-size: 36px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            font-weight: 500;
+            font-size: 15px;
+            color: var(--text-dark);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .nav-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 116, 58, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 116, 58, 0.4);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(212, 116, 58, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(212, 116, 58, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        /* Dark theme button styles */
+        [data-theme="dark"] .btn-secondary {
+            background: #1e1e1e;
+            color: #e8a680;
+            border-color: #e8a680;
+        }
+
+        [data-theme="dark"] .btn-secondary:hover {
+            background: #e8a680;
+            color: #0d1117;
+        }
+
+        [data-theme="dark"] .nav-btn {
+            background: #e8a680;
+            color: #0d1117;
+            box-shadow: 0 4px 15px rgba(232, 166, 128, 0.3);
+        }
+
+        [data-theme="dark"] .nav-btn:hover {
+            background: #d4743a;
+            box-shadow: 0 6px 20px rgba(232, 166, 128, 0.4);
+        }
+
+        [data-theme="dark"] .recipe-card {
+            background: #1e1e1e;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] input:not([type="submit"]),
+        [data-theme="dark"] textarea,
+        [data-theme="dark"] select {
+            background: #1e1e1e;
+            color: #e0e0e0;
+            border-color: #2d2d2d;
+        }
+
+        [data-theme="dark"] input:focus,
+        [data-theme="dark"] textarea:focus,
+        [data-theme="dark"] select:focus {
+            border-color: #e8a680;
+            box-shadow: 0 0 0 3px rgba(232, 166, 128, 0.1);
+        }
+
+        [data-theme="dark"] footer {
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+        }
+
+        /* Hero section dark theme */
+        [data-theme="dark"] .hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d1117 100%);
+        }
+
+        [data-theme="dark"] .search-section {
+            background: #0d1117;
+        }
+
+        [data-theme="dark"] .section {
+            background: #0d1117;
+        }
+
+        /* Recipe detail dark theme */
+        [data-theme="dark"] .recipe-hero {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        }
+
+        [data-theme="dark"] .recipe-info-item {
+            background: #1e1e1e;
+        }
+
+        [data-theme="dark"] .ingredients-list {
+            background: #1e1e1e;
+            border: 1px solid #2d2d2d;
+        }
+
+        /* Form dark theme */
+        [data-theme="dark"] .recipe-form-container {
+            background: #1e1e1e;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="dark"] .form-group label {
+            color: #e0e0e0;
+        }
+
+        [data-theme="dark"] .btn-like {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        [data-theme="dark"] .btn-like:hover,
+        [data-theme="dark"] .btn-like.liked {
+            background: #ff6b6b;
+            color: #0d1117;
+        }
+
+        [data-theme="dark"] .theme-toggle-btn {
+            border-color: #e8a680;
+            color: #e8a680;
+        }
+
+        /* Hero image dark theme */
+        [data-theme="dark"] .hero-image {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        }
+
+        /* CTA section dark theme */
+        [data-theme="dark"] [style*="background: linear-gradient(135deg, #fff8f0"] {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d1117 100%) !important;
+        }
+
+        /* Smooth transition for theme change */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 500px;
+            background: linear-gradient(135deg, #fff8f0 0%, #ffe8d6 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(212, 116, 58, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(212, 116, 58, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 56px;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .hero-image {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 150px;
+            box-shadow: 0 20px 60px rgba(212, 116, 58, 0.2);
+        }
+
+        /* Recipe Card */
+        .recipe-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recipe-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
+        }
+
+        .recipe-content {
+            padding: 1.5rem;
+        }
+
+        .recipe-title {
+            font-size: 20px;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .recipe-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .recipe-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .recipe-description {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .recipe-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+        }
+
+        .recipe-likes {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .like-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .like-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .like-btn.liked {
+            color: var(--accent);
+        }
+
+        /* Search */
+        .search-section {
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            padding-right: 50px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(212, 116, 58, 0.1);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Grid */
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* Section */
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(212, 116, 58, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 1rem;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            display: block;
+            margin-bottom: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav .container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+                font-size: 13px;
+            }
+
+            .hero .container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content h1 {
+                font-size: 36px;
+            }
+
+            .hero-image {
+                height: 300px;
+                font-size: 100px;
+            }
+
+            .recipes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+
+            .section {
+                padding: 2rem 0;
+            }
+
+            .section-title h2 {
+                font-size: 28px;
+            }
+
+            h1 { font-size: 32px; }
+            h2 { font-size: 24px; }
+            h3 { font-size: 18px; }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+     <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">CookBook</a>
+            <ul>
+                <li><a href="{% url 'home' %}">Каталог</a></li>
+                <li><a href="{% url 'add_recipe' %}">Добавить рецепт</a></li>
+                <li><a href="{% url 'favorites' %}">Избранное</a></li>
+            </ul>
+            <div style="display:flex;gap:1rem;align-items:center">
+                {% if user.is_authenticated %}
+                    <span style="font-weight:600;color:var(--text-dark)">{{ user.username }}</span>
+                    {% if user.is_staff %}
+                        <a href="/admin/" class="btn btn-secondary btn-sm" style="background:var(--accent)">Админ</a>
+                    {% endif %}
+                    <a href="{% url 'profile' %}" class="btn btn-secondary btn-sm">Профиль</a>
+                    <form method="POST" action="{% url 'logout' %}" style="display:inline;margin:0;padding:0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary btn-sm" style="cursor:pointer;font-weight:600;border:2px solid var(--primary);background:white;color:var(--primary);padding:0.75rem 1.5rem;border-radius:25px;font-size:15px;transition:all 0.3s ease">Выход</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-btn">Вход</a>
+                    <a href="{% url 'register' %}" class="btn btn-secondary btn-sm">Регистрация</a>
+                {% endif %}
+                <button id="theme-toggle" onclick="toggleTheme()" style="background:none;border:2px solid var(--primary);color:var(--text-dark);width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all 0.3s ease" title="Переключить тему">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+
+    {% if messages %}
+      <div class="container" style="max-width:1200px;margin:1rem auto 0;">
+        {% for message in messages %}
+          <div style="padding:10px 16px;border-radius:8px;background:var(--light);color:var(--success);margin-bottom:0.5rem;box-shadow:0 6px 20px rgba(39,174,96,0.06)">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>О Recepto</h4>
+                    <ul>
+                        <li><a href="#">О проекте</a></li>
+                        <li><a href="#">Новости</a></li>
+                        <li><a href="#">Для шефов</a></li>
+                        <li><a href="#">Блог</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Рецепты</h4>
+                    <ul>
+                        <li><a href="#">Популярные</a></li>
+                        <li><a href="#">Быстрые</a></li>
+                        <li><a href="#">Диеты</a></li>
+                        <li><a href="#">Сладости</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Помощь</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Поддержка</a></li>
+                        <li><a href="#">Обратная связь</a></li>
+                        <li><a href="#">Контакты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Правовая информация</h4>
+                    <ul>
+                        <li><a href="#">Конфиденциальность</a></li>
+                        <li><a href="#">Условия использования</a></li>
+                        <li><a href="#">Cookies</a></li>
+                        <li><a href="#">Карта сайта</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Recepto. Делитесь рецептами, вдохновляйте других. Создано с ❤️ для любителей готовить.</p>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+    
+    <script>
+        // Dark theme toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('theme-icon');
+            if (icon) {
+                icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+        }
+
+        // Initialize theme on page load
+        initTheme();
+    </script>
+</body>
+</html>
