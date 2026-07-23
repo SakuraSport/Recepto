@@ -270,6 +270,14 @@
               <a href="{% url 'toggle_like' recipe.id %}" class="btn-like">🤍 Добавить</a>
             {% endif %}
             
+            {% if is_favorited %}
+              <a href="{% url 'toggle_favorite' recipe.id %}" class="btn-like" style="border-color:#FFD700;color:#FFD700;background:transparent">⭐ В избранном</a>
+            {% else %}
+              <a href="{% url 'toggle_favorite' recipe.id %}" class="btn-like" style="border-color:#FFD700;color:#FFD700;background:transparent">☆ Добавить в избранное</a>
+            {% endif %}
+            
+            <a href="{% url 'download_recipe' recipe.id %}" class="btn-like" style="border-color:var(--primary);color:var(--primary);background:transparent">📥 JSON</a>
+            
             {% if user.is_authenticated and recipe.author == user %}
               <a href="{% url 'edit_recipe' recipe.id %}" class="btn-like" style="border-color:var(--primary);color:var(--primary);background:transparent">✏️ Редактировать</a>
               <a href="{% url 'delete_recipe' recipe.id %}" class="btn-like" style="border-color:var(--accent);color:var(--accent);background:transparent">🗑️ Удалить</a>

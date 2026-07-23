@@ -10,173 +10,50 @@
             <p>Рецепты, которые вы добавили в избранное и хотите попробовать</p>
         </div>
 
-        <!-- Filter & Sort -->
-        <div style="background: #fef5e7; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <span style="color: var(--text-light);">Сортировать по:</span>
-                <select style="padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; font-family: 'Poppins', sans-serif;">
-                    <option>Новые</option>
-                    <option>Популярные</option>
-                    <option>Самые рейтинговые</option>
-                    <option>Быстрые рецепты</option>
-                </select>
-            </div>
-            <div style="display: flex; gap: 1rem;">
-                <button class="btn btn-secondary btn-sm">🔄 Очистить избранное</button>
-                <button class="btn btn-primary btn-sm">📥 Скачать список</button>
-            </div>
-        </div>
-
-        <!-- Favorites Grid -->
-        <div class="recipes-grid">
-            <!-- Recipe Card 1 -->
-            <div class="recipe-card fade-in">
-                <div class="recipe-image">🍝</div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">Паста Карбонара</h3>
-                    <div class="recipe-meta">
-                        <span>👤 Мария</span>
-                        <span>⏱️ 25 мин</span>
-                        <span>⭐ 4.8</span>
-                    </div>
-                    <p class="recipe-description">Классическая итальянская паста с беконом, сливками и пармезаном.</p>
-                    <div class="recipe-footer">
-                        <div class="recipe-likes">
-                            <button class="like-btn liked" onclick="this.classList.toggle('liked')">❤️</button>
-                            <span>234</span>
+        {% if recipes %}
+            <!-- Recipes Grid -->
+            <div class="recipes-grid">
+                {% for recipe in recipes %}
+                    <div class="recipe-card fade-in">
+                        {% if recipe.image %}
+                            <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="recipe-image" style="width:100%;height:200px;object-fit:cover">
+                        {% else %}
+                            <div class="recipe-image" style="display:flex;align-items:center;justify-content:center;font-size:80px;height:200px">🍽️</div>
+                        {% endif %}
+                        <div class="recipe-content">
+                            <h3 class="recipe-title">{{ recipe.title }}</h3>
+                            <div class="recipe-meta">
+                                <span>👤 {{ recipe.author.username }}</span>
+                                <span>⏱️ {{ recipe.cook_time }} мин</span>
+                                <span>❤️ {{ recipe.likes }}</span>
+                            </div>
+                            <p class="recipe-description">{{ recipe.description|truncatewords:15 }}</p>
+                            <div class="recipe-footer">
+                                <div class="recipe-likes">
+                                    <a href="{% url 'toggle_favorite' recipe.id %}" class="like-btn liked" title="Удалить из избранного">⭐</a>
+                                </div>
+                                <div style="display:flex;gap:0.5rem">
+                                    <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary btn-sm">👁️ Просмотр</a>
+                                    <a href="{% url 'download_recipe' recipe.id %}" class="btn btn-primary btn-sm" title="Скачать как JSON">📥 JSON</a>
+                                </div>
+                            </div>
                         </div>
-                        <button class="btn btn-primary btn-sm">👁️ Просмотр</button>
                     </div>
-                </div>
+                {% endfor %}
             </div>
-
-            <!-- Recipe Card 2 -->
-            <div class="recipe-card fade-in">
-                <div class="recipe-image">🍰</div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">Шоколадный торт</h3>
-                    <div class="recipe-meta">
-                        <span>👤 Екатерина</span>
-                        <span>⏱️ 45 мин</span>
-                        <span>⭐ 5.0</span>
-                    </div>
-                    <p class="recipe-description">Нежный трёхслойный шоколадный торт с ганашем.</p>
-                    <div class="recipe-footer">
-                        <div class="recipe-likes">
-                            <button class="like-btn liked" onclick="this.classList.toggle('liked')">❤️</button>
-                            <span>421</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm">👁️ Просмотр</button>
-                    </div>
-                </div>
+        {% else %}
+            <div style="background: #fef5e7; padding: 3rem 2rem; border-radius: 12px; text-align: center;">
+                <p style="font-size: 18px; color: var(--text-light); margin-bottom: 1.5rem">Пока нет избранных рецептов 😔</p>
+                <a href="{% url 'home' %}" class="btn btn-primary">🔍 Найти рецепты</a>
             </div>
-
-            <!-- Recipe Card 3 -->
-            <div class="recipe-card fade-in">
-                <div class="recipe-image">🥗</div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">Цезарь салат</h3>
-                    <div class="recipe-meta">
-                        <span>👤 Ольга</span>
-                        <span>⏱️ 15 мин</span>
-                        <span>⭐ 4.6</span>
-                    </div>
-                    <p class="recipe-description">Свежий салат с пармезаном, крутонами и острым соусом.</p>
-                    <div class="recipe-footer">
-                        <div class="recipe-likes">
-                            <button class="like-btn liked" onclick="this.classList.toggle('liked')">❤️</button>
-                            <span>267</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm">👁️ Просмотр</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recipe Card 4 -->
-            <div class="recipe-card fade-in">
-                <div class="recipe-image">🍜</div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">Рамен</h3>
-                    <div class="recipe-meta">
-                        <span>👤 Юки</span>
-                        <span>⏱️ 35 мин</span>
-                        <span>⭐ 4.7</span>
-                    </div>
-                    <p class="recipe-description">Ароматная японская лапша в бульоне с курицей.</p>
-                    <div class="recipe-footer">
-                        <div class="recipe-likes">
-                            <button class="like-btn liked" onclick="this.classList.toggle('liked')">❤️</button>
-                            <span>289</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm">👁️ Просмотр</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recipe Card 5 -->
-            <div class="recipe-card fade-in">
-                <div class="recipe-image">🍪</div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">Печенье с шоколадом</h3>
-                    <div class="recipe-meta">
-                        <span>👤 Эмма</span>
-                        <span>⏱️ 20 мин</span>
-                        <span>⭐ 5.0</span>
-                    </div>
-                    <p class="recipe-description">Мягкое печенье с кусочками молочного и тёмного шоколада.</p>
-                    <div class="recipe-footer">
-                        <div class="recipe-likes">
-                            <button class="like-btn liked" onclick="this.classList.toggle('liked')">❤️</button>
-                            <span>543</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm">👁️ Просмотр</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Recipe Card 6 -->
-            <div class="recipe-card fade-in">
-                <div class="recipe-image">🥘</div>
-                <div class="recipe-content">
-                    <h3 class="recipe-title">Паэлья Валенсиана</h3>
-                    <div class="recipe-meta">
-                        <span>👤 Карлос</span>
-                        <span>⏱️ 50 мин</span>
-                        <span>⭐ 4.9</span>
-                    </div>
-                    <p class="recipe-description">Испанское блюдо с рисом, морепродуктами и шафраном.</p>
-                    <div class="recipe-footer">
-                        <div class="recipe-likes">
-                            <button class="like-btn liked" onclick="this.classList.toggle('liked')">❤️</button>
-                            <span>198</span>
-                        </div>
-                        <button class="btn btn-primary btn-sm">👁️ Просмотр</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endif %}
 
         <!-- CTA Section -->
         <div style="background: linear-gradient(135deg, #fff8f0 0%, #ffe8d6 100%); padding: 3rem 2rem; border-radius: 16px; text-align: center; margin-top: 3rem;">
             <h2 style="margin-bottom: 1rem;">Хотите узнать больше рецептов?</h2>
             <p style="color: var(--text-light); margin-bottom: 2rem; font-size: 16px;">Обновляйте свой список избранного новыми интересными рецептами каждый день!</p>
-            <button class="btn btn-primary" onclick="window.location.href='/'">🔍 Увидеть все рецепты</button>
+            <a href="{% url 'recipes_list' %}" class="btn btn-primary">🔍 Увидеть все рецепты</a>
         </div>
     </div>
 </section>
-
-<script>
-    document.querySelectorAll('.like-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            this.classList.toggle('liked');
-            if (this.classList.contains('liked')) {
-                this.style.animation = 'none';
-                setTimeout(() => {
-                    this.style.animation = '';
-                }, 10);
-            }
-        });
-    });
-</script>
 {% endblock %}

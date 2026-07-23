@@ -10,6 +10,8 @@ urlpatterns = [
     path('recipe/<int:recipe_id>/edit/', views.edit_recipe, name='edit_recipe'),
     path('recipe/<int:recipe_id>/delete/', views.delete_recipe, name='delete_recipe'),
     path('recipe/<int:recipe_id>/like/', views.toggle_like, name='toggle_like'),
+    path('recipe/<int:recipe_id>/favorite/', views.toggle_favorite, name='toggle_favorite'),
+    path('recipe/<int:recipe_id>/download/', views.download_recipe_json, name='download_recipe'),
     path('favorites/', views.favorites, name='favorites'),
     
     # Auth routes
