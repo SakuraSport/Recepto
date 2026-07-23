@@ -270,7 +270,7 @@
               <a href="{% url 'toggle_like' recipe.id %}" class="btn-like">🤍 Добавить</a>
             {% endif %}
             
-            {% if user.is_authenticated and recipe.author == user or user.is_staff %}
+            {% if user.is_authenticated and recipe.author == user %}
               <a href="{% url 'edit_recipe' recipe.id %}" class="btn-like" style="border-color:var(--primary);color:var(--primary);background:transparent">✏️ Редактировать</a>
               <a href="{% url 'delete_recipe' recipe.id %}" class="btn-like" style="border-color:var(--accent);color:var(--accent);background:transparent">🗑️ Удалить</a>
             {% endif %}

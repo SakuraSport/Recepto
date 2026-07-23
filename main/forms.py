@@ -124,14 +124,29 @@ class RecipeForm(forms.ModelForm):
         fields = ['title', 'description', 'category', 'image', 'ingredients', 'instructions', 
                   'prep_time', 'cook_time', 'servings', 'difficulty']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-group', 'placeholder': 'Название рецепта'}),
-            'description': forms.Textarea(attrs={'class': 'form-group', 'rows': 3, 'placeholder': 'Краткое описание'}),
+            'title': forms.TextInput(attrs={'class': 'form-group', 'placeholder': 'Например: Паста Карбонара'}),
+            'description': forms.Textarea(attrs={'class': 'form-group', 'rows': 3, 'placeholder': 'Опишите ваш рецепт: история, особенности, рекомендации...'}),
             'category': forms.Select(attrs={'class': 'form-group'}),
             'image': forms.FileInput(attrs={'class': 'form-group', 'accept': 'image/*'}),
-            'ingredients': forms.Textarea(attrs={'class': 'form-group', 'rows': 6, 'placeholder': 'Каждый ингредиент с новой строки'}),
-            'instructions': forms.Textarea(attrs={'class': 'form-group', 'rows': 8, 'placeholder': 'Пошаговые инструкции'}),
-            'prep_time': forms.NumberInput(attrs={'class': 'form-group', 'placeholder': 'Минуты'}),
-            'cook_time': forms.NumberInput(attrs={'class': 'form-group', 'placeholder': 'Минуты'}),
-            'servings': forms.NumberInput(attrs={'class': 'form-group'}),
+            'ingredients': forms.Textarea(attrs={'class': 'form-group', 'rows': 6, 'placeholder': 'Каждый ингредиент на новой строке\nПример:\n2 яйца\n100г спагетти\n50г бекона'}),
+            'instructions': forms.Textarea(attrs={'class': 'form-group', 'rows': 8, 'placeholder': 'Каждый шаг на новой строке\nПример:\nСварите спагетти\nОбжарьте бекон\nСмешайте ингредиенты'}),
+            'prep_time': forms.NumberInput(attrs={'class': 'form-group', 'placeholder': 'Минуты', 'min': '0', 'value': '0'}),
+            'cook_time': forms.NumberInput(attrs={'class': 'form-group', 'placeholder': 'Минуты', 'min': '0', 'value': '0'}),
+            'servings': forms.NumberInput(attrs={'class': 'form-group', 'min': '1', 'value': '1'}),
             'difficulty': forms.Select(attrs={'class': 'form-group'}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        prep_time = cleaned_data.get('prep_time')
+        cook_time = cleaned_data.get('cook_time')
+        servings = cleaned_data.get('servings')
+        
+        if prep_time is None or prep_time < 0:
+            self.add_error('prep_time', 'Время подготовки должно быть 0 или больше')
+        if cook_time is None or cook_time < 0:
+            self.add_error('cook_time', 'Время готовки должно быть 0 или больше')
+        if servings is None or servings < 1:
+            self.add_error('servings', 'Количество порций должно быть минимум 1')
+        
+        return cleaned_data

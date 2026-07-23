@@ -188,11 +188,7 @@
       </div>
 
       <div class="profile-actions">
-        {% if user.is_staff %}
-          <a href="{% url 'add_recipe' %}" class="btn btn-secondary">➕ Рецепт</a>
-        {% else %}
-          <div style="color: white; font-size: 12px; text-align: center;">👨‍🍳 Пользователь</div>
-        {% endif %}
+        <a href="{% url 'add_recipe' %}" class="btn btn-secondary">➕ Новый рецепт</a>
       </div>
     </div>
 
@@ -220,12 +216,10 @@
                       <span>❤️ {{ recipe.likes }}</span>
                     </div>
                   </a>
-                  {% if request.user.is_staff %}
-                    <div style="display:flex;gap:0.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
-                      <a href="{% url 'edit_recipe' recipe.id %}" style="flex:1;text-align:center;padding:0.5rem;background:var(--primary);color:white;border-radius:6px;font-size:12px;text-decoration:none;transition:all 0.3s ease" onmouseover="this.style.background='var(--primary-dark)'" onmouseout="this.style.background='var(--primary)'">✏️ Редактировать</a>
-                      <a href="{% url 'delete_recipe' recipe.id %}" style="flex:1;text-align:center;padding:0.5rem;background:var(--accent);color:white;border-radius:6px;font-size:12px;text-decoration:none;transition:all 0.3s ease" onmouseover="this.style.background='#c0392b'" onmouseout="this.style.background='var(--accent)'">🗑️ Удалить</a>
-                    </div>
-                  {% endif %}
+                  <div style="display:flex;gap:0.5rem;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+                    <a href="{% url 'edit_recipe' recipe.id %}" style="flex:1;text-align:center;padding:0.5rem;background:var(--primary);color:white;border-radius:6px;font-size:12px;text-decoration:none;transition:all 0.3s ease" onmouseover="this.style.background='var(--primary-dark)'" onmouseout="this.style.background='var(--primary)'">✏️ Редактировать</a>
+                    <a href="{% url 'delete_recipe' recipe.id %}" style="flex:1;text-align:center;padding:0.5rem;background:var(--accent);color:white;border-radius:6px;font-size:12px;text-decoration:none;transition:all 0.3s ease" onmouseover="this.style.background='#c0392b'" onmouseout="this.style.background='var(--accent)'">🗑️ Удалить</a>
+                  </div>
                 </div>
               </div>
             {% endfor %}

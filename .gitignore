@@ -28,7 +28,7 @@ wheels/
 local_settings.py
 /media
 /staticfiles
-db.sqlite3
+
 
 # IDE
 .vscode/

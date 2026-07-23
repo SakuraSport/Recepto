@@ -11,6 +11,18 @@ from .models import UserProfile, Recipe, RecipeLike
 
 def home(request):
     recipes = Recipe.objects.all().order_by('-created_at')[:12]
+    
+    # Add is_liked info for each recipe if user is authenticated
+    if request.user.is_authenticated:
+        liked_recipe_ids = set(
+            RecipeLike.objects.filter(user=request.user).values_list('recipe_id', flat=True)
+        )
+        for recipe in recipes:
+            recipe.is_liked = recipe.id in liked_recipe_ids
+    else:
+        for recipe in recipes:
+            recipe.is_liked = False
+    
     return render(request, 'main/index.html', {'recipes': recipes})
 
 
@@ -68,6 +80,17 @@ def recipes_list(request):
         recipes = recipes.filter(category=category)
     
     recipes = recipes.order_by('-created_at')
+    
+    # Add is_liked info for each recipe if user is authenticated
+    if request.user.is_authenticated:
+        liked_recipe_ids = set(
+            RecipeLike.objects.filter(user=request.user).values_list('recipe_id', flat=True)
+        )
+        for recipe in recipes:
+            recipe.is_liked = recipe.id in liked_recipe_ids
+    else:
+        for recipe in recipes:
+            recipe.is_liked = False
     
     context = {
         'recipes': recipes,
@@ -164,8 +187,8 @@ def user_profile(request):
 def edit_recipe(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     
-    if not request.user.is_staff:
-        messages.error(request, '❌ Только администраторы могут редактировать рецепты!')
+    if recipe.author != request.user:
+        messages.error(request, '❌ Вы можете редактировать только свои рецепты!')
         return redirect('recipe_detail', recipe_id=recipe_id)
     
     if request.method == 'POST':
@@ -184,8 +207,8 @@ def edit_recipe(request, recipe_id):
 def delete_recipe(request, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id)
     
-    if not request.user.is_staff:
-        messages.error(request, '❌ Только администраторы могут удалять рецепты!')
+    if recipe.author != request.user:
+        messages.error(request, '❌ Вы можете удалять только свои рецепты!')
         return redirect('recipe_detail', recipe_id=recipe_id)
     
     if request.method == 'POST':

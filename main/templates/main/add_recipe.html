@@ -109,66 +109,22 @@
       <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
-        Тут будут рецепты
-        <div class="form-group">
-          <label for="title">Название рецепта *</label>
-          <input type="text" id="title" name="title" placeholder="Например: Паста Карбонара" required>
-        </div>
-
-        <!-- Description -->
-        <div class="form-group">
-          <label for="description">Описание *</label>
-          <textarea id="description" name="description" placeholder="Опишите ваш рецепт: история, особенности, рекомендации..." required></textarea>
-        </div>
-
-        <!-- Image -->
-        <div class="form-group">
-          <label for="image">Фото блюда</label>
-          <input type="file" id="image" name="image" accept="image/*">
-          <div class="form-help">JPG, PNG или GIF, максимум 5МБ</div>
-        </div>
-
-        <!-- Ingredients -->
-        <div class="form-group">
-          <label for="ingredients">Ингредиенты *</label>
-          <textarea id="ingredients" name="ingredients" placeholder="Каждый ингредиент на новой строке&#10;Пример:&#10;2 яйца&#10;100г спагетти&#10;50г бекона" required></textarea>
-          <div class="form-help">Каждый ингредиент на отдельной строке</div>
-        </div>
-
-        <!-- Instructions -->
-        <div class="form-group">
-          <label for="instructions">Способ приготовления *</label>
-          <textarea id="instructions" name="instructions" placeholder="Каждый шаг на новой строке&#10;Пример:&#10;Сварите спагетти&#10;Обжарьте бекон&#10;Смешайте ингредиенты" required></textarea>
-          <div class="form-help">Каждый шаг на отдельной строке</div>
-        </div>
-
-        <!-- Timing -->
-        <div class="form-row">
+        {% for field in form %}
           <div class="form-group">
-            <label for="prep_time">Время подготовки (мин)</label>
-            <input type="number" id="prep_time" name="prep_time" min="0" value="0">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-help">{{ field.help_text }}</div>
+            {% endif %}
+            {% if field.errors %}
+              <div style="color: var(--accent); margin-top: 0.5rem;">
+                {% for error in field.errors %}
+                  <p>❌ {{ error }}</p>
+                {% endfor %}
+              </div>
+            {% endif %}
           </div>
-          <div class="form-group">
-            <label for="cook_time">Время готовки (мин)</label>
-            <input type="number" id="cook_time" name="cook_time" min="0" value="0">
-          </div>
-        </div>
-
-        <!-- Servings & Difficulty -->
-        <div class="form-row">
-          <div class="form-group">
-            <label for="servings">Количество порций</label>
-            <input type="number" id="servings" name="servings" min="1" value="1">
-          </div>
-          <div class="form-group">
-            <label for="difficulty">Сложность</label>
-            <select id="difficulty" name="difficulty">
-              <option value="easy">🟢 Легко</option>
-              <option value="medium">🟡 Средне</option>
-              <option value="hard">🔴 Сложно</option>
-            </select>
-          </div>
-        </div>
+        {% endfor %}
 
         <!-- Actions -->
         <div class="form-actions">

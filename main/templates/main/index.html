@@ -76,7 +76,7 @@
                             <p class="recipe-description">{{ recipe.description }}</p>
                             <div class="recipe-footer">
                                 <div class="recipe-likes">
-                                    <button class="like-btn {% if is_liked %}liked{% endif %}" onclick="toggleLike({{ recipe.id }})">❤️</button>
+                                    <button class="like-btn {% if recipe.is_liked %}liked{% endif %}" onclick="toggleLike({{ recipe.id }})">❤️</button>
                                     <span id="likes-{{ recipe.id }}">{{ recipe.likes }}</span>
                                 </div>
                                 <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary btn-sm">Подробнее</a>
