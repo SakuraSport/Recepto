@@ -28,7 +28,6 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "recepto-71p5.vercel.app"
     ".vercel.app"
 ]
 
