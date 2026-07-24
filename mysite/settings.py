@@ -120,7 +120,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@cookbook.local'
+DEFAULT_FROM_EMAIL = 'noreply@recepto.local'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'

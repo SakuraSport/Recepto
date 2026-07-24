@@ -1,6 +1,6 @@
-# 🍳 CookBook - Платформа для обмена рецептами
+# 🍳 Recepto - Платформа для обмена рецептами
 
-**CookBook** — это современное веб-приложение для управления рецептами, построенное на Django. Пользователи могут добавлять свои рецепты, искать рецепты других, лайкить и просматривать коллекции блюд.
+**Recepto** — это современное веб-приложение для управления рецептами, построенное на Django. Пользователи могут добавлять свои рецепты, искать рецепты других, лайкить и просматривать коллекции блюд.
 
 ## 📸 Скриншоты
 
@@ -70,8 +70,8 @@
 
 1. **Клонируйте репозиторий:**
 ```bash
-git clone https://github.com/yourusername/cookbook.git
-cd cookbook
+git clone https://github.com/yourusername/recepto.git
+cd recepto
 ```
 
 2. **Создайте виртуальное окружение:**
@@ -120,7 +120,7 @@ http://localhost:8000/admin/
 ## 📁 Структура проекта
 
 ```
-cookbook/
+recepto/
 ├── main/                      # Основное приложение Django
 │   ├── migrations/           # Миграции БД
 │   ├── templates/main/       # HTML шаблоны
@@ -284,8 +284,8 @@ cookbook/
 
 Если у вас есть вопросы или предложения:
 - 📧 Email: sakura@example.com
-- 🐛 GitHub Issues: [Создать issue](https://github.com/yourusername/cookbook/issues)
+- 🐛 GitHub Issues: [Создать issue](https://github.com/yourusername/recepto/issues)
 
 ---
 
-**Спасибо за использование CookBook! 🍳✨**
+**Спасибо за использование Recepto! 🍳✨**
