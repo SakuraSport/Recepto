@@ -852,50 +852,48 @@
   /* ========================================
      ТЕМНАЯ ТЕМА
      ======================================== */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --text-dark: #e8e8e8;
-      --text-light: #a0a0a0;
-      --text-gray: #808080;
-      --light: #1a1a1a;
-      --lighter: #242424;
-      --white: #0f0f0f;
-      --border: #333333;
-      --border-light: #2a2a2a;
-    }
+  :root[data-theme="dark"] {
+    --text-dark: #e8e8e8;
+    --text-light: #a0a0a0;
+    --text-gray: #808080;
+    --light: #1a1a1a;
+    --lighter: #242424;
+    --white: #0d1117;
+    --border: #333333;
+    --border-light: #2a2a2a;
+  }
 
-    .recipe-form-container {
-      background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-    }
+  :root[data-theme="dark"] .recipe-form-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+  }
 
-    .recipe-form-container > form {
-      background: transparent;
-    }
+  :root[data-theme="dark"] .recipe-form-container > form {
+    background: transparent;
+  }
 
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-      color: var(--text-dark);
-      border-color: var(--border);
-    }
+  :root[data-theme="dark"] .form-group input,
+  :root[data-theme="dark"] .form-group textarea,
+  :root[data-theme="dark"] .form-group select {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    color: var(--text-dark);
+    border-color: var(--border);
+  }
 
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      background: linear-gradient(135deg, rgba(255, 107, 91, 0.1) 0%, rgba(255, 107, 91, 0.05) 100%);
-    }
+  :root[data-theme="dark"] .form-group input:focus,
+  :root[data-theme="dark"] .form-group textarea:focus,
+  :root[data-theme="dark"] .form-group select:focus {
+    background: linear-gradient(135deg, rgba(255, 107, 91, 0.1) 0%, rgba(255, 107, 91, 0.05) 100%);
+  }
 
-    .form-actions {
-      border-top-color: var(--border);
-    }
+  :root[data-theme="dark"] .form-actions {
+    border-top-color: var(--border);
+  }
 
-    .btn-cancel,
-    .btn-secondary {
-      background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
-      color: var(--primary);
-      border-color: var(--primary);
-    }
+  :root[data-theme="dark"] .btn-cancel,
+  :root[data-theme="dark"] .btn-secondary {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    color: var(--primary);
+    border-color: var(--primary);
   }
 
   /* ========================================
