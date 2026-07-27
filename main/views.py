@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
 
-from .forms import RegisterForm, LoginForm, RecipeForm
+from .forms import RegisterForm, LoginForm, RecipeForm, ProfileEditForm
 from .models import Recipe, RecipeLike, UserProfile, RecipeFavorite
 
 
@@ -215,10 +215,39 @@ def profile(request):
         author=request.user
     )
 
+    favorites_count = RecipeFavorite.objects.filter(
+        user=request.user
+    ).count()
 
     return render(request, 'main/profile.html', {
         'profile': profile,
-        'recipes': recipes
+        'recipes': recipes,
+        'favorites_count': favorites_count
+    })
+
+
+@login_required
+def edit_profile(request):
+
+    profile = UserProfile.objects.get(
+        user=request.user
+    )
+
+    if request.method == 'POST':
+        # update username if provided
+        username = request.POST.get('username')
+        profile.bio = request.POST.get('bio', profile.bio)
+        if 'avatar' in request.FILES:
+            profile.avatar = request.FILES['avatar']
+        profile.save()
+        if username and username != request.user.username:
+            request.user.username = username
+            request.user.save()
+        messages.success(request, 'Профиль сохранён')
+        return redirect('profile')
+
+    return render(request, 'main/edit_profile.html', {
+        'profile': profile
     })
 
 
@@ -259,7 +288,8 @@ def edit_recipe(request, recipe_id):
 
 
     return render(request, 'main/edit_recipe.html', {
-        'form': form
+        'form': form,
+        'recipe': recipe
     })
 
 

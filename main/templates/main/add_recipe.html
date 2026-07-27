@@ -2,42 +2,398 @@
 {% block title %}Добавить рецепт — Recepto{% endblock %}
 {% block extra %}
 <style>
+  /* ========================================
+     ПЕРЕМЕННЫЕ И ГЛОБАЛЬНЫЕ СТИЛИ
+     ======================================== */
+  :root {
+    --primary: #FF6B5B;
+    --primary-light: #FF8A73;
+    --primary-dark: #E63D32;
+    --accent: #FF6B5B;
+    --text-dark: #1a1a1a;
+    --text-light: #7f8c8d;
+    --text-gray: #95a5a6;
+    --white: #ffffff;
+    --light: #f8f9fa;
+    --lighter: #fafbfc;
+    --border: #e0e0e0;
+    --border-light: #f0f0f0;
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.12);
+    --shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.15);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  /* ========================================
+     АНИМАЦИИ И KEYFRAMES
+     ======================================== */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  @keyframes focusGlow {
+    0% {
+      box-shadow: 0 0 0 0 rgba(255, 107, 91, 0.4);
+    }
+    100% {
+      box-shadow: 0 0 0 8px rgba(255, 107, 91, 0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes checkMark {
+    0% {
+      transform: scale(0) rotate(-45deg);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1) rotate(0);
+    }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* ========================================
+     КОНТЕЙНЕР ФОРМЫ
+     ======================================== */
   .recipe-form-container {
-    max-width: 800px;
-    margin: 2rem auto;
-    background: white;
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: var(--shadow);
+    max-width: 900px;
+    margin: 3.5rem auto;
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    padding: 0;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    animation: fadeInUp 0.8s ease-out;
+    position: relative;
   }
 
+  .recipe-form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 107, 91, 0.02) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* ========================================
+     ФОРМА ЗАГОЛОВОК
+     ======================================== */
   .recipe-form-container h2 {
-    margin-bottom: 1.5rem;
+    margin: 0;
+    padding: 3rem 3rem 2rem;
     text-align: center;
+    font-size: 32px;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    letter-spacing: -0.5px;
+    position: relative;
+    overflow: hidden;
+    animation: slideInDown 0.6s ease-out;
   }
 
-  .form-group {
-    margin-bottom: 1.5rem;
+  .recipe-form-container h2::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
   }
+
+  .recipe-form-container h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  }
+
+  /* ========================================
+     СОДЕРЖИМОЕ ФОРМЫ
+     ======================================== */
+  .recipe-form-container > form {
+    position: relative;
+    z-index: 1;
+    padding: 3rem;
+  }
+
+  /* ========================================
+     УВЕДОМЛЕНИЯ О СООБЩЕНИЯХ
+     ======================================== */
+  .alert {
+    padding: 16px 20px;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: slideUp 0.4s ease-out;
+    border-left: 4px solid;
+    backdrop-filter: blur(10px);
+    font-weight: 500;
+  }
+
+  .alert::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    animation: checkMark 0.5s ease-out;
+  }
+
+  .alert-success {
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    color: #065f46;
+    border-color: #10b981;
+  }
+
+  .alert-success::before {
+    background: #10b981;
+    border-radius: 50%;
+    position: relative;
+  }
+
+  .alert-success::before::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .alert-error,
+  .alert-danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+    color: #7f1d1d;
+    border-color: #ef4444;
+  }
+
+  .alert-error::before,
+  .alert-danger::before {
+    background: #ef4444;
+    border-radius: 50%;
+  }
+
+  .alert-warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%);
+    color: #7c2d12;
+    border-color: #f59e0b;
+  }
+
+  .alert-warning::before {
+    background: #f59e0b;
+    border-radius: 50%;
+  }
+
+  .alert-info {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+    color: #1e3a8a;
+    border-color: #3b82f6;
+  }
+
+  .alert-info::before {
+    background: #3b82f6;
+    border-radius: 50%;
+  }
+
+  /* ========================================
+     ГРУППА ФОРМЫ
+     ======================================== */
+  .form-group {
+    margin-bottom: 2.5rem;
+    animation: fadeInUp 0.6s ease-out backwards;
+  }
+
+  .form-group:nth-child(1) { animation-delay: 0.1s; }
+  .form-group:nth-child(2) { animation-delay: 0.15s; }
+  .form-group:nth-child(3) { animation-delay: 0.2s; }
+  .form-group:nth-child(4) { animation-delay: 0.25s; }
+  .form-group:nth-child(5) { animation-delay: 0.3s; }
 
   .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
     color: var(--text-dark);
+    font-size: 15px;
+    letter-spacing: -0.3px;
+    transition: var(--transition);
   }
 
+  .form-group label::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 18px;
+    background: linear-gradient(180deg, var(--primary), var(--primary-light));
+    border-radius: 2px;
+  }
+
+  .form-group:focus-within label {
+    color: var(--primary);
+  }
+
+  /* ========================================
+     ПОЛЯ ВВОДА
+     ======================================== */
   .form-group input,
   .form-group textarea,
   .form-group select {
     width: 100%;
-    padding: 12px;
+    padding: 14px 16px;
     border: 2px solid var(--border);
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    border-radius: var(--radius-md);
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 14px;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     box-sizing: border-box;
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    color: var(--text-dark);
+    position: relative;
+    z-index: 1;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--text-light);
+    opacity: 0.7;
+  }
+
+  .form-group input:hover,
+  .form-group textarea:hover,
+  .form-group select:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(255, 107, 91, 0.08);
   }
 
   .form-group input:focus,
@@ -45,50 +401,499 @@
   .form-group select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(212, 116, 58, 0.1);
+    box-shadow: 0 0 0 4px rgba(255, 107, 91, 0.15), 0 4px 12px rgba(255, 107, 91, 0.1);
+    background: linear-gradient(135deg, rgba(255, 107, 91, 0.02) 0%, rgba(255, 107, 91, 0.01) 100%);
+    animation: focusGlow 0.6s ease-out;
   }
 
+  .form-group input:disabled,
+  .form-group textarea:disabled,
+  .form-group select:disabled {
+    background: var(--light);
+    color: var(--text-light);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  /* ========================================
+     TEXTAREA
+     ======================================== */
   .form-group textarea {
     resize: vertical;
-    min-height: 120px;
+    min-height: 140px;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
   }
 
+  .form-group textarea::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .form-group textarea::-webkit-scrollbar-track {
+    background: var(--lighter);
+    border-radius: 10px;
+  }
+
+  .form-group textarea::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary), var(--primary-light));
+    border-radius: 10px;
+    transition: var(--transition);
+  }
+
+  .form-group textarea::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--primary-dark), var(--primary));
+  }
+
+  /* ========================================
+     SELECT
+     ======================================== */
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FF6B5B' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+    cursor: pointer;
+  }
+
+  .form-group select:focus {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23E63D32' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  }
+
+  /* ========================================
+     СТРОКА ФОРМЫ
+     ======================================== */
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 2rem;
   }
 
-  .form-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
+  .form-row > .form-group {
+    margin-bottom: 0;
   }
 
-  .btn-submit {
-    flex: 1;
-  }
-
-  .btn-cancel {
-    flex: 1;
-    background: white;
-    color: var(--primary);
-    border: 2px solid var(--primary);
-  }
-
-  .btn-cancel:hover {
-    background: var(--light);
-  }
-
+  /* ========================================
+     СПРАВКА ПО ФОРМЕ
+     ======================================== */
   .form-help {
     font-size: 12px;
     color: var(--text-light);
-    margin-top: 0.3rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: var(--transition);
+    opacity: 0.8;
   }
 
+  .form-group:focus-within .form-help {
+    opacity: 1;
+    color: var(--primary);
+  }
+
+  .form-help::before {
+    content: '💡';
+    font-size: 11px;
+  }
+
+  /* ========================================
+     ОШИБКИ ВАЛИДАЦИИ
+     ======================================== */
+  .form-group.has-error input,
+  .form-group.has-error textarea,
+  .form-group.has-error select {
+    border-color: #ef4444;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.02) 0%, rgba(220, 38, 38, 0.01) 100%);
+  }
+
+  .form-group.has-error input:focus,
+  .form-group.has-error textarea:focus,
+  .form-group.has-error select:focus {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15), 0 4px 12px rgba(239, 68, 68, 0.1);
+  }
+
+  .form-group div[style*="color: var(--accent)"] {
+    margin-top: 0.75rem;
+    animation: slideUp 0.4s ease-out;
+  }
+
+  .form-group p {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(220, 38, 38, 0.04) 100%);
+    color: #7f1d1d;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    border-left: 3px solid #ef4444;
+    font-size: 13px;
+    font-weight: 500;
+    margin: 8px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ========================================
+     ДЕЙСТВИЯ ФОРМЫ
+     ======================================== */
+  .form-actions {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    animation: slideUp 0.6s ease-out 0.8s backwards;
+  }
+
+  /* ========================================
+     КНОПКИ
+     ======================================== */
+  .btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.2) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+
+  .btn:hover::before {
+    opacity: 1;
+  }
+
+  .btn-submit,
+  .btn-primary {
+    flex: 1;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(255, 107, 91, 0.3);
+    font-size: 15px;
+  }
+
+  .btn-submit:hover,
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(255, 107, 91, 0.4);
+  }
+
+  .btn-submit:active,
+  .btn-primary:active {
+    transform: translateY(-1px);
+  }
+
+  .btn-cancel,
+  .btn-secondary {
+    flex: 1;
+    background: linear-gradient(135deg, var(--white) 0%, var(--lighter) 100%);
+    color: var(--primary);
+    border: 2px solid var(--primary);
+    box-shadow: 0 4px 12px rgba(255, 107, 91, 0.1);
+    font-size: 15px;
+  }
+
+  .btn-cancel:hover,
+  .btn-secondary:hover {
+    background: linear-gradient(135deg, var(--light) 0%, var(--white) 100%);
+    box-shadow: 0 8px 20px rgba(255, 107, 91, 0.15);
+    transform: translateY(-3px);
+  }
+
+  .btn-cancel:active,
+  .btn-secondary:active {
+    transform: translateY(-1px);
+  }
+
+  /* ========================================
+     LOADING STATE
+     ======================================== */
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .btn:disabled::after {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  /* ========================================
+     АДАПТИВНОСТЬ (ПЛАНШЕТЫ)
+     ======================================== */
+  @media (max-width: 1024px) {
+    .recipe-form-container {
+      margin: 2.5rem auto;
+    }
+
+    .recipe-form-container h2 {
+      font-size: 28px;
+      padding: 2.5rem 2.5rem 1.75rem;
+    }
+
+    .recipe-form-container > form {
+      padding: 2.5rem;
+    }
+
+    .form-actions {
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+    }
+  }
+
+  /* ========================================
+     АДАПТИВНОСТЬ (МОБИЛЬНЫЕ)
+     ======================================== */
   @media (max-width: 768px) {
+    .recipe-form-container {
+      margin: 2rem 1rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .recipe-form-container h2 {
+      font-size: 24px;
+      padding: 2rem 2rem 1.5rem;
+    }
+
+    .recipe-form-container > form {
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 2rem;
+    }
+
     .form-row {
       grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .form-group label {
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 12px 14px;
+      font-size: 16px;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+    }
+
+    .form-actions {
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+    }
+
+    .btn {
+      width: 100%;
+    }
+
+    .btn-submit,
+    .btn-cancel {
+      flex: none;
+    }
+
+    .alert {
+      font-size: 14px;
+      padding: 14px 16px;
+    }
+  }
+
+  /* ========================================
+     АДАПТИВНОСТЬ (МАЛЕНЬКИЕ МОБИЛЬНЫЕ)
+     ======================================== */
+  @media (max-width: 480px) {
+    .section {
+      padding: 1rem 0;
+    }
+
+    .recipe-form-container {
+      margin: 1rem 0.75rem;
+      border-radius: var(--radius-lg);
+    }
+
+    .recipe-form-container h2 {
+      font-size: 20px;
+      padding: 1.5rem 1.5rem 1.25rem;
+    }
+
+    .recipe-form-container > form {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.75rem;
+    }
+
+    .form-group label {
+      font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 12px 12px;
+      font-size: 16px;
+      border-radius: var(--radius-sm);
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+    }
+
+    .form-help {
+      font-size: 11px;
+    }
+
+    .form-actions {
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      font-size: 13px;
+      border-radius: var(--radius-sm);
+    }
+
+    .alert {
+      font-size: 13px;
+      padding: 12px 14px;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  /* ========================================
+     ОЧЕНЬ МАЛЕНЬКИЕ МОБИЛЬНЫЕ (320px)
+     ======================================== */
+  @media (max-width: 360px) {
+    .recipe-form-container {
+      margin: 0.75rem 0;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .recipe-form-container h2 {
+      font-size: 18px;
+      padding: 1.25rem 1.25rem 1rem;
+    }
+
+    .recipe-form-container > form {
+      padding: 1.25rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      font-size: 12px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      padding: 10px 11px;
+      font-size: 16px;
+    }
+
+    .btn {
+      padding: 11px 16px;
+      font-size: 12px;
+    }
+  }
+
+  /* ========================================
+     ТЕМНАЯ ТЕМА
+     ======================================== */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text-dark: #e8e8e8;
+      --text-light: #a0a0a0;
+      --text-gray: #808080;
+      --light: #1a1a1a;
+      --lighter: #242424;
+      --white: #0f0f0f;
+      --border: #333333;
+      --border-light: #2a2a2a;
+    }
+
+    .recipe-form-container {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+    }
+
+    .recipe-form-container > form {
+      background: transparent;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+      color: var(--text-dark);
+      border-color: var(--border);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      background: linear-gradient(135deg, rgba(255, 107, 91, 0.1) 0%, rgba(255, 107, 91, 0.05) 100%);
+    }
+
+    .form-actions {
+      border-top-color: var(--border);
+    }
+
+    .btn-cancel,
+    .btn-secondary {
+      background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+  }
+
+  /* ========================================
+     ПЕЧАТЬ
+     ======================================== */
+  @media print {
+    .recipe-form-container h2 {
+      background: var(--white);
+      color: var(--text-dark);
+    }
+
+    .btn,
+    .form-actions {
+      display: none;
     }
   }
 </style>
@@ -102,7 +907,9 @@
 
       {% if messages %}
         {% for message in messages %}
-          <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+          <div class="alert alert-{{ message.tags }}">
+            <span>{{ message }}</span>
+          </div>
         {% endfor %}
       {% endif %}
 
@@ -110,26 +917,42 @@
         {% csrf_token %}
 
         {% for field in form %}
-          <div class="form-group">
-            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-            {{ field }}
-            {% if field.help_text %}
-              <div class="form-help">{{ field.help_text }}</div>
-            {% endif %}
-            {% if field.errors %}
-              <div style="color: var(--accent); margin-top: 0.5rem;">
-                {% for error in field.errors %}
-                  <p>❌ {{ error }}</p>
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+          {% if field.widget.input_type != "hidden" %}
+            <div class="form-group {% if field.errors %}has-error{% endif %}">
+              <label for="{{ field.id_for_label }}">
+                {{ field.label }}
+              </label>
+
+              {{ field }}
+
+              {% if field.help_text %}
+                <div class="form-help">{{ field.help_text|safe }}</div>
+              {% endif %}
+
+              {% if field.errors %}
+                <div style="color: var(--accent); margin-top: 0.5rem;">
+                  {% for error in field.errors %}
+                    <p>
+                      <span>❌</span>
+                      <span>{{ error }}</span>
+                    </p>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
         {% endfor %}
 
         <!-- Actions -->
         <div class="form-actions">
-          <a href="{% url 'home' %}" class="btn btn-secondary btn-cancel">← Отмена</a>
-          <button class="btn btn-primary btn-submit" type="submit">📤 Опубликовать</button>
+          <a href="{% url 'home' %}" class="btn btn-secondary btn-cancel">
+            <span>←</span>
+            <span>Отмена</span>
+          </a>
+          <button class="btn btn-primary btn-submit" type="submit">
+            <span>📤</span>
+            <span>Опубликовать</span>
+          </button>
         </div>
       </form>
     </div>
