@@ -1,0 +1,17 @@
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('main', '0002_userprofile_avatar_alter_userprofile_user_recipe_and_more'),
+    ]
+
+    operations = [
+        migrations.AlterField(
+            model_name='userprofile',
+            name='verification_token',
+            field=models.CharField(blank=True, max_length=100, null=True, unique=True),
+        ),
+    ]

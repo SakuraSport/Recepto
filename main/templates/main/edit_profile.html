@@ -1,0 +1,134 @@
+{% extends 'main/base.html' %}
+{% block title %}Редактирование профиля — Recepto{% endblock %}
+{% block extra_css %}
+<style>
+  .edit-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    background: var(--lighter);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  .edit-container h2 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .avatar-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: var(--light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 48px;
+    border: 2px solid var(--border);
+    object-fit: cover;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(212, 116, 58, 0.1);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .btn-submit {
+    flex: 1;
+  }
+
+  .btn-cancel {
+    flex: 1;
+    background: var(--lighter);
+    color: var(--primary);
+    border: 2px solid var(--primary);
+  }
+
+  .btn-cancel:hover {
+    background: var(--light);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="edit-container">
+      <h2>✏️ Редактирование профиля</h2>
+
+      <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <!-- Avatar -->
+        {% if profile.avatar %}
+          <img src="{{ profile.avatar.url }}" alt="Avatar" class="avatar-preview">
+        {% else %}
+          <div class="avatar-preview">👤</div>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="avatar">Аватар (JPG, PNG, GIF)</label>
+          <input type="file" id="avatar" name="avatar" accept="image/*">
+          <small style="color:var(--text-light)">Максимальный размер: 5МБ</small>
+        </div>
+
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">Никнейм</label>
+          <input type="text" id="username" name="username" value="{{ user.username }}" required>
+        </div>
+
+        <!-- Bio -->
+        <div class="form-group">
+          <label for="bio">О себе</label>
+          <textarea id="bio" name="bio" placeholder="Расскажите о себе и ваших кулинарных интересах...">{{ profile.bio }}</textarea>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <a href="{% url 'profile' %}" class="btn btn-secondary btn-cancel">← Отмена</a>
+          <button class="btn btn-primary btn-submit" type="submit">💾 Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,294 @@
+{% extends 'main/base.html' %}
+{% block title %}{{ recipe.title }} — Recepto{% endblock %}
+{% block extra_css %}
+<style>
+  .recipe-hero {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    padding: 2rem;
+    border-radius: 16px;
+    color: white;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .recipe-image {
+    width: 100%;
+    max-height: 400px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-bottom: 2rem;
+  }
+
+  .recipe-info-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .recipe-info-item {
+    background: var(--lighter);
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .recipe-info-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .recipe-info-label {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+  }
+
+  .recipe-difficulty {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+
+  .difficulty-easy {
+    background: rgba(39, 174, 96, 0.15);
+    color: var(--success);
+  }
+
+  .difficulty-medium {
+    background: rgba(243, 156, 18, 0.15);
+    color: #f39c12;
+  }
+
+  .difficulty-hard {
+    background: rgba(231, 76, 60, 0.15);
+    color: var(--accent);
+  }
+
+  .section-title {
+    font-size: 24px;
+    margin: 2rem 0 1.5rem;
+    color: var(--text-dark);
+    border-bottom: 3px solid var(--primary);
+    padding-bottom: 0.5rem;
+    display: inline-block;
+  }
+
+  .ingredients-list {
+    background: var(--lighter);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+  }
+
+  .ingredient-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+  }
+
+  .ingredient-item:last-child {
+    border-bottom: none;
+  }
+
+  .ingredient-item::before {
+    content: '✓';
+    color: var(--success);
+    font-weight: bold;
+    margin-right: 1rem;
+    font-size: 16px;
+  }
+
+  .instructions-list {
+    counter-reset: step-counter;
+  }
+
+  .instruction-item {
+    counter-increment: step-counter;
+    margin-bottom: 1.5rem;
+    padding-left: 50px;
+    position: relative;
+  }
+
+  .instruction-item::before {
+    content: counter(step-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: var(--primary);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  .instruction-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-dark);
+  }
+
+  .recipe-author {
+    background: var(--lighter);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .author-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 1rem;
+  }
+
+  .recipe-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .btn-like {
+    background: none;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-like:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-like.liked {
+    background: var(--accent);
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    .recipe-info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    {% if recipe.image %}
+      <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="recipe-image">
+    {% else %}
+      <div class="recipe-image" style="background:linear-gradient(135deg,var(--primary-light),var(--primary));display:flex;align-items:center;justify-content:center;font-size:120px">🍽️</div>
+    {% endif %}
+
+    <div class="recipe-hero">
+      <h1 style="margin:0;font-size:36px">{{ recipe.title }}</h1>
+      <p style="margin:0.5rem 0 0;opacity:0.9">👨‍🍳 {{ recipe.author.username }} • 👁️ {{ recipe.views }} просмотров</p>
+      
+      <div class="recipe-info-grid">
+        <div class="recipe-info-item">
+          <div class="recipe-info-value">{{ recipe.prep_time }}</div>
+          <div class="recipe-info-label">мин подготовка</div>
+        </div>
+        <div class="recipe-info-item">
+          <div class="recipe-info-value">{{ recipe.cook_time }}</div>
+          <div class="recipe-info-label">мин готовки</div>
+        </div>
+        <div class="recipe-info-item">
+          <div class="recipe-info-value">{{ recipe.servings }}</div>
+          <div class="recipe-info-label">порций</div>
+        </div>
+        <div class="recipe-info-item">
+          <div class="recipe-info-value">{{ recipe.likes }}</div>
+          <div class="recipe-info-label">лайков</div>
+        </div>
+      </div>
+
+      <div class="recipe-difficulty difficulty-{{ recipe.difficulty }}">
+        {{ recipe.get_difficulty_display }}
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:2rem;margin-bottom:2rem">
+      <div>
+        <p style="color:var(--text-light);line-height:1.8;font-size:16px">{{ recipe.description }}</p>
+
+        <h2 class="section-title">📋 Ингредиенты</h2>
+        <div class="ingredients-list">
+          {% for ingredient in ingredients %}
+            <div class="ingredient-item">{{ ingredient }}</div>
+          {% endfor %}
+        </div>
+
+        <h2 class="section-title">👨‍🍳 Приготовление</h2>
+        <div class="instructions-list">
+          {% for instruction in instructions %}
+            <div class="instruction-item">
+              <div class="instruction-text">{{ instruction }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <div class="recipe-author">
+          {% if recipe.author.userprofile.avatar %}
+            <img src="{{ recipe.author.userprofile.avatar.url }}" alt="{{ recipe.author.username }}" class="author-avatar" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin:0 auto 1rem">
+          {% else %}
+            <div class="author-avatar">👤</div>
+          {% endif %}
+          <h3>{{ recipe.author.get_full_name|default:recipe.author.username }}</h3>
+          <p style="color:var(--text-light);font-size:13px">{{ recipe.author.userprofile.bio|truncatewords:10 }}</p>
+          
+          <div class="recipe-actions">
+            {% if is_liked %}
+              <a href="{% url 'toggle_like' recipe.id %}" class="btn-like liked">❤️ Нравится</a>
+            {% else %}
+              <a href="{% url 'toggle_like' recipe.id %}" class="btn-like">🤍 Добавить</a>
+            {% endif %}
+            
+            {% if is_favorited %}
+              <a href="{% url 'toggle_favorite' recipe.id %}" class="btn-like" style="border-color:#FFD700;color:#FFD700;background:transparent">⭐ В избранном</a>
+            {% else %}
+              <a href="{% url 'toggle_favorite' recipe.id %}" class="btn-like" style="border-color:#FFD700;color:#FFD700;background:transparent">☆ Добавить в избранное</a>
+            {% endif %}
+            
+            <a href="{% url 'download_recipe' recipe.id %}" class="btn-like" style="border-color:var(--primary);color:var(--primary);background:transparent">📥 JSON</a>
+            
+            {% if user.is_authenticated and recipe.author == user %}
+              <a href="{% url 'edit_recipe' recipe.id %}" class="btn-like" style="border-color:var(--primary);color:var(--primary);background:transparent">✏️ Редактировать</a>
+              <a href="{% url 'delete_recipe' recipe.id %}" class="btn-like" style="border-color:var(--accent);color:var(--accent);background:transparent">🗑️ Удалить</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

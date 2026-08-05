@@ -1,0 +1,215 @@
+{% extends 'main/base.html' %}
+{% block title %}Регистрация — Recepto{% endblock %}
+{% block extra_css %}
+<style>
+  .auth-container {
+    max-width: 480px;
+    margin: 2rem auto;
+    background: var(--lighter);
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+
+  .auth-container h2 {
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .auth-subtitle {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 2rem;
+    font-size: 14px;
+  }
+
+  .form-group input {
+    border: 2px solid var(--border);
+    transition: all 0.3s ease;
+  }
+
+  .form-group input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(212, 116, 58, 0.1);
+  }
+
+  .password-strength {
+    margin-top: 0.5rem;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--light);
+    display: none;
+  }
+
+  .password-strength.show {
+    display: block;
+  }
+
+  .strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    margin-top: 6px;
+    background: #e0e0e0;
+    overflow: hidden;
+  }
+
+  .strength-bar-inner {
+    height: 100%;
+    width: 0;
+    transition: width 0.3s ease;
+  }
+
+  .strength-weak { width: 33%; background: var(--accent); }
+  .strength-medium { width: 66%; background: #f39c12; }
+  .strength-strong { width: 100%; background: var(--success); }
+
+  .auth-link {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-size: 14px;
+    color: var(--text-light);
+  }
+
+  .auth-link a {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .error-list {
+    background: rgba(231, 76, 60, 0.1);
+    border-left: 3px solid var(--accent);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: 13px;
+  }
+
+  .error-list li {
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+
+  .btn-submit {
+    width: 100%;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="auth-container">
+      <h2>🍳 Создать аккаунт</h2>
+      <p class="auth-subtitle">Присоединитесь к нашему кулинарному сообществу</p>
+
+      <form method="post" novalidate id="registerForm">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+          <div class="error-list">
+            <ul>
+              {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <div class="form-group">
+          <label for="id_username">Имя пользователя</label>
+          {{ form.username }}
+          {% if form.username.errors %}
+            <div class="error-list" style="margin-top:0.5rem;margin-bottom:0">
+              <ul>
+                {% for error in form.username.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="id_password1">Пароль</label>
+          {{ form.password1 }}
+          <div class="password-strength" id="passwordStrength">
+            <div>Сложность: <strong id="strengthText">слабый</strong></div>
+            <div class="strength-bar">
+              <div class="strength-bar-inner" id="strengthBar"></div>
+            </div>
+          </div>
+          {% if form.password1.errors %}
+            <div class="error-list" style="margin-top:0.5rem;margin-bottom:0">
+              <ul>
+                {% for error in form.password1.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          <label for="id_password2">Подтвердите пароль</label>
+          {{ form.password2 }}
+          {% if form.password2.errors %}
+            <div class="error-list" style="margin-top:0.5rem;margin-bottom:0">
+              <ul>
+                {% for error in form.password2.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </div>
+
+        <button class="btn btn-primary btn-submit" type="submit">Зарегистрироваться</button>
+      </form>
+
+      <p class="auth-link">
+        Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  const pwInput = document.getElementById('id_password1');
+  if (pwInput) {
+    pwInput.addEventListener('input', function(e) {
+      const password = e.target.value;
+      const strength = document.getElementById('passwordStrength');
+      const bar = document.getElementById('strengthBar');
+      const text = document.getElementById('strengthText');
+
+      if (password.length === 0) {
+        strength.classList.remove('show');
+        return;
+      }
+
+      strength.classList.add('show');
+
+      let score = 0;
+      if (password.length >= 8) score++;
+      if (password.length >= 12) score++;
+      if (/[a-z]/.test(password)) score++;
+      if (/[A-Z]/.test(password)) score++;
+      if (/[0-9]/.test(password)) score++;
+      if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
+
+      bar.className = 'strength-bar-inner';
+      if (score <= 2) {
+        bar.classList.add('strength-weak');
+        text.textContent = 'слабый';
+      } else if (score <= 4) {
+        bar.classList.add('strength-medium');
+        text.textContent = 'средний';
+      } else {
+        bar.classList.add('strength-strong');
+        text.textContent = 'сильный';
+      }
+    });
+  }
+</script>
+{% endblock %}

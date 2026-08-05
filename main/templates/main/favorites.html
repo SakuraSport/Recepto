@@ -1,0 +1,59 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Избранное - Recepto{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="section-title">
+            <h2>❤️ Мои избранные рецепты</h2>
+            <p>Рецепты, которые вы добавили в избранное и хотите попробовать</p>
+        </div>
+
+        {% if recipes %}
+            <!-- Recipes Grid -->
+            <div class="recipes-grid">
+                {% for recipe in recipes %}
+                    <div class="recipe-card fade-in">
+                        {% if recipe.image %}
+                            <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="recipe-image" style="width:100%;height:200px;object-fit:cover">
+                        {% else %}
+                            <div class="recipe-image" style="display:flex;align-items:center;justify-content:center;font-size:80px;height:200px">🍽️</div>
+                        {% endif %}
+                        <div class="recipe-content">
+                            <h3 class="recipe-title">{{ recipe.title }}</h3>
+                            <div class="recipe-meta">
+                                <span>👤 {{ recipe.author.username }}</span>
+                                <span>⏱️ {{ recipe.cook_time }} мин</span>
+                                <span>❤️ {{ recipe.likes }}</span>
+                            </div>
+                            <p class="recipe-description">{{ recipe.description|truncatewords:15 }}</p>
+                            <div class="recipe-footer">
+                                <div class="recipe-likes">
+                                    <a href="{% url 'toggle_favorite' recipe.id %}" class="like-btn liked" title="Удалить из избранного">⭐</a>
+                                </div>
+                                <div style="display:flex;gap:0.5rem">
+                                    <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary btn-sm">👁️ Просмотр</a>
+                                    <a href="{% url 'download_recipe' recipe.id %}" class="btn btn-primary btn-sm" title="Скачать как JSON">📥 JSON</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div style="background: var(--light); padding: 3rem 2rem; border-radius: 12px; text-align: center; border: 1px solid var(--border);">
+                <p style="font-size: 18px; color: var(--text-light); margin-bottom: 1.5rem">Пока нет избранных рецептов 😔</p>
+                <a href="{% url 'home' %}" class="btn btn-primary">🔍 Найти рецепты</a>
+            </div>
+        {% endif %}
+
+        <!-- CTA Section -->
+        <div style="background: linear-gradient(135deg, var(--light) 0%, var(--lighter) 100%); padding: 3rem 2rem; border-radius: 16px; text-align: center; margin-top: 3rem; border: 1px solid var(--border);">
+            <h2 style="margin-bottom: 1rem;">Хотите узнать больше рецептов?</h2>
+            <p style="color: var(--text-light); margin-bottom: 2rem; font-size: 16px;">Обновляйте свой список избранного новыми интересными рецептами каждый день!</p>
+            <a href="{% url 'recipes_list' %}" class="btn btn-primary">🔍 Увидеть все рецепты</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

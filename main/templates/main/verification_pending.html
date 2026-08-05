@@ -1,0 +1,149 @@
+{% extends 'main/base.html' %}
+{% block title %}Подтвердите email — Recepto{% endblock %}
+{% block extra_css %}
+<style>
+  .verification-container {
+    max-width: 540px;
+    margin: 4rem auto;
+    background: var(--lighter);
+    padding: 3rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .verification-icon {
+    font-size: 60px;
+    margin-bottom: 1rem;
+  }
+
+  .verification-container h2 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+
+  .verification-text {
+    color: var(--text-light);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .verification-email {
+    background: var(--light);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    word-break: break-all;
+  }
+
+  .verification-timer {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 1rem;
+  }
+
+  .resend-link {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .resend-link a {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .step-indicator {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .step {
+    flex: 1;
+    text-align: center;
+  }
+
+  .step-number {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    line-height: 32px;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-number.completed {
+    background: var(--success);
+  }
+
+  .step-label {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .step-connector {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--border);
+    z-index: -1;
+  }
+</style>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="verification-container">
+      <div class="verification-icon">📧</div>
+
+      <div class="step-indicator">
+        <div class="step">
+          <div class="step-number completed">✓</div>
+          <div class="step-label">Регистрация</div>
+        </div>
+        <div class="step-connector"></div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-label">Подтверждение</div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-label">Вход</div>
+        </div>
+      </div>
+
+      <h2>Подтвердите вашу почту</h2>
+
+      <div class="verification-text">
+        Мы отправили письмо со ссылкой активации на:
+      </div>
+
+      <div class="verification-email">{{ user.email }}</div>
+
+      <div class="verification-text">
+        <strong>Проверьте входящие и папку спама.</strong><br>
+        Ссылка действительна 24 часа. После подтверждения вы сможете войти в аккаунт.
+      </div>
+
+      <div class="verification-timer">
+        ⏱️ Письмо может прийти в течение нескольких минут
+      </div>
+
+      <div class="resend-link">
+        <p style="margin: 0 0 1rem;">Не получили письмо?</p>
+        <a href="{% url 'register' %}">← Вернуться на страницу регистрации</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
